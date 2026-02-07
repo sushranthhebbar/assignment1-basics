@@ -8,7 +8,7 @@ import numpy.typing as npt
 import torch
 from jaxtyping import Bool, Float, Int
 from torch import Tensor
-
+import cs336_basics
 
 def run_linear(
     d_in: int,
@@ -29,7 +29,10 @@ def run_linear(
         Float[Tensor, "... d_out"]: The transformed output of your linear module.
     """
 
-    raise NotImplementedError
+    from cs336_basics.Linear import Linear
+    linear = Linear(d_in, d_out)
+    linear.load_state_dict({"W": weights.T.contiguous()})
+    return linear(in_features)
 
 
 def run_embedding(
@@ -51,7 +54,10 @@ def run_embedding(
         Float[Tensor, "... d_model"]: Batch of embeddings returned by your Embedding layer.
     """
 
-    raise NotImplementedError
+    from cs336_basics.Embedding import Embedding
+    embedding = Embedding(vocab_size, d_model)
+    embedding.load_state_dict({"embedding": weights})
+    return embedding(token_ids)
 
 
 def run_swiglu(
@@ -378,7 +384,10 @@ def run_rmsnorm(
         Float[Tensor,"... d_model"]: Tensor of with the same shape as `in_features` with the output of running
         RMSNorm of the `in_features`.
     """
-    raise NotImplementedError
+    from cs336_basics.RMSNorm import RMSNorm
+    rmsNorm = RMSNorm(d_model, eps)
+    rmsNorm.load_state_dict({"W": weights})
+    return rmsNorm(in_features)
 
 
 def run_silu(in_features: Float[Tensor, " ..."]) -> Float[Tensor, " ..."]:
